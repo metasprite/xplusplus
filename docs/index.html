@@ -1,6 +1,55 @@
-<html>
-<body>
-<h1>testing github pages</h1>
-<p>testing hlapnfljkrljbvnakd94wl;ave</p>
-</body>
-</html>
+<htmi><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mega Man X++ Documentation</title><style type="text/css">body {
+	margin: 40px auto;
+	max-width: 750px;
+	line-height: 1.65;
+	font-size: 18px;
+	font-family:Source Sans Pro,Helvetica Neue,Arial,sans-serif;
+	background-color: #F4F4F4;
+	color: #101010;
+	padding: 0 10px;
+}
+
+h1, h2, h3 {
+	line-height: 1.2;
+}
+
+hr {
+	margin-top: 50px;
+}
+
+.code-super {
+	display: table;
+	background: #D2D2D2;
+	margin-top: 50px;
+	margin-bottom: 0px;
+	border-radius: 8px;
+	padding: 12px;
+}
+
+.code-block {
+	display: block;
+	white-space: pre-wrap;
+	border-radius: 8px;
+	padding: 24px;
+	background: #D2D2D2;
+}
+
+.code-internal {
+	cursor: help;
+	color: #202080;
+}
+
+.code-deprecated {
+	cursor: not-allowed;
+	color: #802020;
+}
+
+.code-header {
+	display: inline-block;
+}
+
+.command {
+	color: #F4F4F4;
+	background-color: #101010;
+}
+</style></head><body><h1> <center> Mega Man X++<br>Engine API reference</center></h1><br><br><h2> <center> panic.lua</center></h2><p><center> Error handling.</center></p><h3 class="code-header code-super"><code> panic(err)</code></h3><p>Stop the game and display an error screen in case the code can't continue.</p><h3 class="code-internal code-super" title="(internal)"><code class="code-header"> do_panic(err)</code></h3><p>Set up the engine panic screen.</p><br><br><h2> <center> sandbox.lua</center></h2><p><center> Load untrusted code into a secure sandbox environment.</center></p><h3 class="code-internal code-super" title="(internal)"><code class="code-header"> mkenv()</code></h3><p>Returns a new table filled out with whitelisted functions, to serve as the global table for a sandbox environment.</p><h3 class="code-header code-super"><code> sandbox.loadfile(filename)</code></h3><p>Create a sandbox evironment, and load the file using the environment its global table.</p><p>Returns the environment, the loaded file as a function, and any error.</p><h3 class="code-header code-super"><code> sandbox.dofile(filename)</code></h3><p>Same as <code>sandbox.loadfile</code>, but executes the loaded file automatically.</p><p>Returns the environment, and any error.</p><h3 class="code-header code-super"><code> sandbox.dofile_trusted(filename)</code></h3><p>Same as <code>sandbox.dofile</code>, but grants the sandbox direct access to the <code>love</code> table and the ability to include other modules.</p><br><br><h2> <center> util.lua</center></h2><p><center> Standalone utility functions.</center></p><h3 class="code-header code-super"><code> wait(frames)</code></h3><p>Yield coroutine for <code>frames</code> frames.</p><h3 class="code-header code-super"><code> wait(frames, function)</code></h3><p>TODO.</p><h3 class="code-header code-super"><code> load_module(filename)</code></h3><p>Loads a file into a trusted sandbox environment without executing it.</p><p>Returns the loaded environment as a table.</p><h3 class="code-header code-super"><code> init_module(mod)</code></h3><p>Runs the module's main function if it has one. To be used inside an environment loaded with <code>load_module</code>.</p><h3 class="code-header code-super"><code> include_module(mod)</code></h3><p>Can actually be used to access any global variable. Intended only to be used by sandboxed modules to include other modules.</p><p>Returns <code>_G[mod]</code>.</p><h3 class="code-header code-super"><code> deepcopy(table)</code></h3><p>Returns a <b>new</b> table identical to the passed <code>table</code>. Neccessary because tables are references in Lua.</p><br><br><h2> <center> input.lua</center></h2><p><center> Input wrapper.</center></p><h3 class="code-internal code-super" title="(internal)"><code class="code-header"> setup_keys(tbl)</code></h3><p>Fills out <code>tbl</code> with a list of keys set to the default key state.</p><h3 class="code-header code-super"><code> input.handle()</code></h3><p>Updates the state of each key in the internal <code>keys</code> table.</p><h3 class="code-header code-super"><code> input.down(k)<br>input.pressed(k)<br>input.released(k)</code></h3><p>Returns true if key <code>k</code> is currently down, was just pressed, or just released (respectively).</p><br><br><h2> <center> console.lua</center></h2><p><center> Run commands.</center></p><h3 class="code-internal code-super" title="(internal)"><code class="code-header"> state_update[1](dt)<br>state_update[2](dt)</code></h3><p>Handle opening/closing animations for each console state.</p><h3 class="code-internal code-super" title="(internal)"><code class="code-header"> console.keypressed(k)<br>console.textinput(k)</code></h3><p>Handlers for the equivalent <code>love</code> functions.</p><h3 class="code-header code-super"><code> console.open()<br>console.close()</code></h3><p>Set the console's state to open or closed.</p><h3 class="code-header code-super"><code> console.parse(str, noalias)</code></h3><p>Run <code>str</code> as if it were a command typed directly in the console. Set <code>noalias</code> to ignore aliases.</p><h3 class="code-header code-super"><code> console.update(dt)</code></h3><p>Tick the <code>wait</code> variable and parse any queued commands.</p><br><br><h2> <center> sched.lua</center></h2><p><center> Game object scheduler.</center></p><h3 class="code-internal code-super" title="(internal)"><code class="code-header"> mkobjenv()</code></h3><p>Returns a new clone of the default object environment table.</p><h3 class="code-header code-super"><code> sched.load_object(typename)</code></h3><p>Load <code>obj/[typename].lua</code> and add it to the table of available object types.</p><h3 class="code-header code-super"><code> sched.spawn(typename, properties)</code></h3><p>Set up a sandbox environment for the object, execute its <code>spawn</code> function, and add it to the object table. <code>properties</code> is an optional table for setting the object's spawn-time variables, usually <code>x</code> and <code>y</code>.</p><p>Returns the object's environment table. and the object's <code>edict</code> index.</p><h3 class="code-header code-super"><code> sched.update(dt)<br>sched.draw()</code></h3><p>Loop through all objects and run their respective coroutines.</p></body></html>
